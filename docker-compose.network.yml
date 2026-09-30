@@ -1,0 +1,10 @@
+services:
+  app:
+    networks:
+      - default
+      - acore
+
+networks:
+  acore:
+    external: true
+    name: ${AC_NETWORK_NAME}

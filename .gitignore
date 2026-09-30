@@ -1,0 +1,9 @@
+.next
+node_modules
+coverage
+tsconfig.tsbuildinfo
+.env
+.env*.local
+data/modelviewer
+public/branding/*
+!public/branding/.gitkeep
