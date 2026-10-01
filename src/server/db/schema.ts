@@ -28,6 +28,12 @@ export interface AccountTable {
   totp_secret?: string | null;
 }
 
+export interface AccountAccessTable {
+  id: number;
+  gmlevel: number;
+  RealmID: number;
+}
+
 export interface AccountProfileTable {
   account_id: number;
   verified_email: string | null;
@@ -89,6 +95,7 @@ export interface CharacterTable {
 
 export interface AuthDatabase {
   account: AccountTable;
+  account_access: AccountAccessTable;
 }
 
 export interface WebDatabase {

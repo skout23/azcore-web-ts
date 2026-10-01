@@ -15,6 +15,8 @@ const envSchema = z.object({
   APP_NAME: z.string().default("AzerothCore"),
   APP_ENV: z.enum(["development", "test", "production"]).default("production"),
   APP_SECRET: optionalString,
+  ADMIN_MIN_GMLEVEL: z.coerce.number().int().min(1).max(4).default(3),
+  ADMIN_REALM_ID: z.coerce.number().int().default(-1),
   APP_URL: z.string().url().default("http://localhost:8080"),
   APP_TIMEZONE: z.string().default("UTC"),
   LOG_LEVEL: z.string().default("info"),

@@ -77,6 +77,8 @@ Required production settings:
 APP_ENV=production
 APP_URL=https://accounts.example.com
 APP_SECRET=change-me
+ADMIN_MIN_GMLEVEL=3
+ADMIN_REALM_ID=-1
 
 DB_AUTH_HOST=host.docker.internal
 DB_AUTH_PORT=3306
@@ -195,6 +197,12 @@ docker compose -f docker-compose.yml -f docker-compose.network.yml up -d
 
 ## Operational Notes
 
+- `/setup` generates SQL and `.env` snippets in the browser. It does not save
+  secrets or write configuration files.
+- `/admin` requires a logged-in account with an AzerothCore `account_access`
+  `gmlevel` greater than or equal to `ADMIN_MIN_GMLEVEL`. AzerothCore documents
+  level 3 as `SEC_ADMINISTRATOR`; use `ADMIN_REALM_ID=-1` for the global staff
+  grant.
 - Redis is not required. Web sessions are stored in the `sessions` table created
   by `npm run db:migrate` in `DB_WEB_DATABASE`.
 - The app migration creates app-owned tables only. It does not change any

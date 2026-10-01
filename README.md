@@ -60,6 +60,15 @@ read-only AzerothCore access and registration-enabled auth writes.
 - `DB_WORLD_DATABASE`: AzerothCore `world` database name used for world-backed
   features. Intended to be read-only when those features are implemented.
 
+## Setup And Admin
+
+- `/setup` provides a browser-only install helper that generates `.env` and SQL
+  grant snippets. It does not save database passwords or write files.
+- `/admin` is available only to logged-in AzerothCore staff accounts from the
+  `account_access` table.
+- `ADMIN_MIN_GMLEVEL=3` matches AzerothCore's `SEC_ADMINISTRATOR` level.
+- `ADMIN_REALM_ID=-1` checks the global/all-realms staff grant.
+
 ## Parity Scope
 
 - AzerothCore SRP6 login and registration.

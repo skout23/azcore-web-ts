@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { Route } from "next";
 import Link from "next/link";
 import "@/styles/globals.css";
 import { env } from "@/server/config/env";
@@ -21,6 +22,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             <Link href="/guilds">Guilds</Link>
             <Link href="/auctions">Auctions</Link>
             <Link href="/leaderboard">Leaderboard</Link>
+            <Link href={"/setup" as Route}>Setup</Link>
+            <Link href={"/admin" as Route}>Admin</Link>
           </nav>
         </header>
         {children}

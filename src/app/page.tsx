@@ -30,6 +30,7 @@ export default async function HomePage() {
           <h1>{realmName()}</h1>
           <p>{env.SITE_DESCRIPTION ?? "Account management, community browsing, and character armory for AzerothCore WotLK realms."}</p>
           <div className="hero-actions">
+            {!env.APP_SECRET ? <a href="/setup">Complete setup</a> : null}
             <a href="/register">Create account</a>
             <a className="secondary" href="/login">Sign in</a>
           </div>
