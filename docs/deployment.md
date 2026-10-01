@@ -147,7 +147,12 @@ such as Caddy, Nginx, or Traefik forwards traffic to the app. Use
 When AzerothCore is managed by Dockhand or another Compose stack, the app can
 join the existing Docker network instead of using `host.docker.internal`.
 
-Set the external network name in `.env`:
+In Dockhand, leave **Additional env file** blank. This repository's Compose file
+does not require a checked-in `.env` file. Put the variables in Dockhand's
+**Environment variables** editor instead; Compose passes them through to the
+container.
+
+Set the external network name and database service names:
 
 ```env
 AC_NETWORK_NAME=azerothcore_default
@@ -155,6 +160,11 @@ DB_AUTH_HOST=mysql
 DB_WEB_HOST=mysql
 DB_CHAR_HOST=mysql
 ```
+
+If Dockhand shows `env file .../.env not found`, the stack is running an older
+Compose revision. Pull the latest repository version, confirm the Compose file no
+longer contains `env_file: .env`, and keep Dockhand's **Additional env file**
+field empty.
 
 Use the network overlay file with every Compose command:
 

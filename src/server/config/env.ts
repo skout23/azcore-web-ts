@@ -25,7 +25,7 @@ const envSchema = z.object({
   DB_AUTH_HOST: z.string().default("host.docker.internal"),
   DB_AUTH_PORT: z.coerce.number().int().positive().default(3306),
   DB_AUTH_DATABASE: z.string().default("acore_auth"),
-  DB_AUTH_USERNAME: z.string().default("azerothcore_web"),
+  DB_AUTH_USERNAME: z.string().default("azweb_auth"),
   DB_AUTH_PASSWORD: z.string().default(""),
   DB_WEB_HOST: z.string().default("host.docker.internal"),
   DB_WEB_PORT: z.coerce.number().int().positive().default(3306),
@@ -35,7 +35,7 @@ const envSchema = z.object({
   DB_CHAR_HOST: z.string().default("host.docker.internal"),
   DB_CHAR_PORT: z.coerce.number().int().positive().default(3306),
   DB_CHAR_DATABASE: z.string().default("acore_characters"),
-  DB_CHAR_USERNAME: z.string().default("azerothcore_web"),
+  DB_CHAR_USERNAME: z.string().default("azweb_ro"),
   DB_CHAR_PASSWORD: z.string().default(""),
   DB_WORLD_DATABASE: z.string().default("acore_world"),
 
