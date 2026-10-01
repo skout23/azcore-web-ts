@@ -187,6 +187,35 @@ You can inspect a network to confirm the database service name:
 docker network inspect azerothcore_default
 ```
 
+## Traefik Routing
+
+Compose labels can use Dockhand/Compose environment variables. Use
+`docker-compose.traefik.yml` when the app should be routed by Traefik:
+
+```sh
+docker compose -f docker-compose.yml -f docker-compose.traefik.yml up -d
+```
+
+Set these variables in Dockhand's environment editor:
+
+```env
+TRAEFIK_HOST=accounts.example.com
+TRAEFIK_ROUTER=azweb
+TRAEFIK_SERVICE=azweb
+TRAEFIK_NETWORK=proxy
+TRAEFIK_HTTP_ENTRYPOINT=web
+TRAEFIK_HTTPS_ENTRYPOINT=websecure
+TRAEFIK_CERT_RESOLVER=myresolver
+```
+
+The Traefik overlay attaches the app to the external network named by
+`TRAEFIK_NETWORK` and routes to the container's internal port `8080`.
+
+If Dockhand only accepts one Compose file path, either configure it to include
+both Compose files or copy the labels and `proxy` network block from
+`docker-compose.traefik.yml` into a Dockhand-specific Compose file in your
+deployment branch.
+
 ## Updating
 
 After pulling new code:

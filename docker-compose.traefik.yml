@@ -1,0 +1,24 @@
+services:
+  app:
+    networks:
+      - proxy
+    labels:
+      - traefik.enable=${TRAEFIK_ENABLE:-true}
+      - traefik.docker.network=${TRAEFIK_NETWORK:-proxy}
+      - traefik.http.middlewares.${TRAEFIK_ROUTER:-azweb}-redirect-https.redirectScheme.scheme=https
+      - traefik.http.middlewares.${TRAEFIK_ROUTER:-azweb}-redirect-https.redirectScheme.permanent=true
+      - traefik.http.routers.${TRAEFIK_ROUTER:-azweb}-https.entrypoints=${TRAEFIK_HTTPS_ENTRYPOINT:-websecure}
+      - traefik.http.routers.${TRAEFIK_ROUTER:-azweb}-https.rule=Host(`${TRAEFIK_HOST:-azweb.example.com}`)
+      - traefik.http.routers.${TRAEFIK_ROUTER:-azweb}-https.tls=true
+      - traefik.http.routers.${TRAEFIK_ROUTER:-azweb}-https.service=${TRAEFIK_SERVICE:-azweb}
+      - traefik.http.routers.${TRAEFIK_ROUTER:-azweb}-https.tls.certresolver=${TRAEFIK_CERT_RESOLVER:-myresolver}
+      - traefik.http.routers.${TRAEFIK_ROUTER:-azweb}-http.rule=Host(`${TRAEFIK_HOST:-azweb.example.com}`)
+      - traefik.http.routers.${TRAEFIK_ROUTER:-azweb}-http.entrypoints=${TRAEFIK_HTTP_ENTRYPOINT:-web}
+      - traefik.http.routers.${TRAEFIK_ROUTER:-azweb}-http.middlewares=${TRAEFIK_ROUTER:-azweb}-redirect-https
+      - traefik.http.routers.${TRAEFIK_ROUTER:-azweb}-http.service=${TRAEFIK_SERVICE:-azweb}
+      - traefik.http.services.${TRAEFIK_SERVICE:-azweb}.loadbalancer.server.port=8080
+
+networks:
+  proxy:
+    external: true
+    name: ${TRAEFIK_NETWORK:-proxy}
