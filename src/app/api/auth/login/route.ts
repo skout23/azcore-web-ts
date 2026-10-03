@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { authenticateAccount } from "@/server/auth/accounts";
+import { authenticateAccount, isDatabaseConnectionError } from "@/server/auth/accounts";
 import { formValue } from "@/server/http/forms";
 import { createDatabaseSession, sessionCookieName, sessionCookieOptions } from "@/server/session/database";
 
@@ -12,7 +12,18 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Username and password are required." }, { status: 422 });
   }
 
-  const account = await authenticateAccount(username, password);
+  let account;
+  try {
+    account = await authenticateAccount(username, password);
+  } catch (error) {
+    if (isDatabaseConnectionError(error)) {
+      console.error("Login failed because the auth database is unavailable or rejected credentials.", error);
+      return NextResponse.json({ error: "Authentication database is unavailable." }, { status: 503 });
+    }
+
+    throw error;
+  }
+
   if (!account) {
     return NextResponse.json({ error: "These credentials do not match our records." }, { status: 401 });
   }

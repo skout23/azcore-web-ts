@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { accountExists, createAccount, isDuplicateAccountError } from "@/server/auth/accounts";
+import { accountExists, createAccount, isDatabaseConnectionError, isDuplicateAccountError } from "@/server/auth/accounts";
 import { wowConfig } from "@/server/config/wow";
 import { clientIp, formValue } from "@/server/http/forms";
 
@@ -28,11 +28,11 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Password confirmation does not match or exceeds 16 characters." }, { status: 422 });
   }
 
-  if (await accountExists(username, email)) {
-    return NextResponse.json({ error: "An account with that username or email already exists." }, { status: 409 });
-  }
-
   try {
+    if (await accountExists(username, email)) {
+      return NextResponse.json({ error: "An account with that username or email already exists." }, { status: 409 });
+    }
+
     await createAccount({
       username,
       email,
@@ -42,6 +42,11 @@ export async function POST(request: Request) {
   } catch (error) {
     if (isDuplicateAccountError(error)) {
       return NextResponse.json({ error: "An account with that username or email already exists." }, { status: 409 });
+    }
+
+    if (isDatabaseConnectionError(error)) {
+      console.error("Registration failed because the auth database is unavailable or rejected credentials.", error);
+      return NextResponse.json({ error: "Authentication database is unavailable." }, { status: 503 });
     }
 
     throw error;

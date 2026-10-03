@@ -1,7 +1,7 @@
 import "server-only";
 import { randomBytes, timingSafeEqual } from "node:crypto";
 import { authDb, webDb } from "@/server/db/connections";
-import { isDuplicateAccountError, normalizeAccountIdentity } from "./identity";
+import { isDatabaseConnectionError, isDuplicateAccountError, normalizeAccountIdentity } from "./identity";
 import { computeSrp6Verifier } from "./srp6";
 
 function normalizeIdentity(value: string): string {
@@ -13,7 +13,7 @@ function toBuffer(value: Buffer | string | null): Buffer | null {
   return Buffer.isBuffer(value) ? value : Buffer.from(value, "binary");
 }
 
-export { isDuplicateAccountError, normalizeAccountIdentity };
+export { isDatabaseConnectionError, isDuplicateAccountError, normalizeAccountIdentity };
 
 export async function findActiveAccountByUsername(username: string) {
   return authDb
