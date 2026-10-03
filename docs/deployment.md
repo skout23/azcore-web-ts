@@ -14,7 +14,7 @@ do not alter AzerothCore's existing `auth`, `characters`, or `world` schemas.
 - A database user for the app-owned web database.
 - Read access to the AzerothCore `auth`, `characters`, and `world` databases.
 - Optional write access to AzerothCore `auth.account` only when registration,
-  password reset, or password-change features are enabled.
+  password-change, or admin account-management features are enabled.
 
 ## Database Setup
 
@@ -35,7 +35,7 @@ docker compose run --rm app npm run db:migrate
 ```
 
 That migration creates app-owned tables such as `sessions`,
-`account_profiles`, `password_reset_tokens`, and `account_operations`.
+`account_profiles`, and `account_operations`.
 
 It does not create or modify AzerothCore's base tables.
 
@@ -59,9 +59,9 @@ GRANT SELECT ON acore_auth.* TO 'azweb_auth'@'%';
 GRANT INSERT ON acore_auth.account TO 'azweb_auth'@'%';
 ```
 
-Password reset or password-change features will also need `UPDATE` on
-`acore_auth.account` for the SRP6 credential columns when those features are
-implemented. Do not grant it until you enable those flows.
+Player password-change or admin password-management features will also need
+`UPDATE` on `acore_auth.account` for the SRP6 credential columns when those
+features are implemented. Do not grant it until you enable those flows.
 
 ## Environment
 
@@ -366,4 +366,6 @@ Prefer a dedicated read-only user such as `azweb_ro` for production, and set
   database connectivity.
 - Registration writes to the AzerothCore `account` table. Keep registration
   disabled with `WOW_REGISTRATION_ENABLED=false` until the database user and
-  public mail/session settings are ready.
+  public session settings are ready.
+- Email addresses are used only for account uniqueness and display. The app
+  does not send SMTP traffic or perform email verification.

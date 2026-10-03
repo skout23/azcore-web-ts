@@ -43,13 +43,6 @@ const envSchema = z.object({
   SESSION_SECURE_COOKIE: booleanFromEnv,
   SESSION_SAME_SITE: z.enum(["lax", "strict", "none"]).default("lax"),
 
-  MAIL_HOST: optionalString,
-  MAIL_PORT: z.coerce.number().int().positive().default(587),
-  MAIL_USERNAME: optionalString,
-  MAIL_PASSWORD: optionalString,
-  MAIL_FROM_ADDRESS: optionalString,
-  MAIL_FROM_NAME: z.string().default("AzerothCore"),
-
   REALM_DEFAULT_ID: z.coerce.number().int().positive().default(1),
   REALM_NAME: z.string().default("AzerothCore"),
   REALM_SOAP_URL: optionalString,

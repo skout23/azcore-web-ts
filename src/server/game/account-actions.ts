@@ -1,12 +1,11 @@
 import { wowConfig } from "@/server/config/wow";
 
-export type AccountAction = "email" | "password" | "password_reset" | "sessions" | "unstuck" | "rename" | "customize" | "deactivate" | "restore";
+export type AccountAction = "email" | "password" | "sessions" | "unstuck" | "rename" | "customize" | "deactivate" | "restore";
 export type CharacterAction = "unstuck" | "rename" | "customize";
 
 export const accountActionLabels: Record<AccountAction, string> = {
   email: "Email changed",
   password: "Password changed",
-  password_reset: "Password reset",
   sessions: "Other sessions ended",
   unstuck: "Unstuck",
   rename: "Rename",

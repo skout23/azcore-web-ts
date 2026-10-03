@@ -36,9 +36,6 @@ export interface AccountAccessTable {
 
 export interface AccountProfileTable {
   account_id: number;
-  verified_email: string | null;
-  email_verified_at: Date | string | null;
-  pending_email: string | null;
   remember_token: string | null;
   deactivated_at: Date | string | null;
   deactivation_ban_date: number | null;
@@ -55,12 +52,6 @@ export interface AccountOperationTable {
   context: string | null;
   created_at: Date | string;
   updated_at: Date | string;
-}
-
-export interface PasswordResetTokenTable {
-  email: string;
-  token: string;
-  created_at: Date | string | null;
 }
 
 export interface SessionTable {
@@ -101,7 +92,6 @@ export interface AuthDatabase {
 export interface WebDatabase {
   account_profiles: AccountProfileTable;
   account_operations: AccountOperationTable;
-  password_reset_tokens: PasswordResetTokenTable;
   sessions: SessionTable;
 }
 

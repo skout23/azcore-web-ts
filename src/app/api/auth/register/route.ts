@@ -53,5 +53,5 @@ export async function POST(request: Request) {
     throw error;
   }
 
-  return NextResponse.redirect(redirectUrl(request, "/verify-email"), { status: 303 });
+  return NextResponse.redirect(redirectUrl(request, "/login"), { status: 303 });
 }

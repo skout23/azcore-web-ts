@@ -50,10 +50,14 @@ See [docs/deployment.md](docs/deployment.md) for production Docker Compose and
 Dockhand/AzerothCore network deployment notes, including SQL grants for
 read-only AzerothCore access and registration-enabled auth writes.
 
+See [docs/roadmap.md](docs/roadmap.md) for the current product/engineering
+roadmap and recommended next features.
+
 ## Database Model
 
 - `DB_WEB_*`: app-owned tables such as sessions, account profiles, password
-  reset tokens, and operation logs. The app migration creates these tables.
+  operation logs, and future web-only preferences. The app migration creates
+  these tables.
 - `DB_AUTH_*`: AzerothCore `auth` database. Read-only is enough unless website
   registration or password-management features are enabled.
 - `DB_CHAR_*`: AzerothCore `characters` database. Intended to be read-only.
@@ -72,7 +76,8 @@ read-only AzerothCore access and registration-enabled auth writes.
 ## Parity Scope
 
 - AzerothCore SRP6 login and registration.
-- Email verification, password reset, profile management, account deactivation, session management.
+- Email uniqueness at registration, player password changes, profile
+  management, account deactivation, and session management.
 - Character armory with equipment, stats, talents, achievements, reputation, skills, mounts, PvP, and model viewer assets.
 - Guilds, leaderboards, auctions, and community visibility controls.
 - Character actions through the world SOAP console: unstuck, rename, and appearance customization.

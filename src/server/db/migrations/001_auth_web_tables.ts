@@ -22,20 +22,9 @@ async function createIndexIfMissing(
 
 export async function up(db: Kysely<WebDatabase>): Promise<void> {
   await db.schema
-    .createTable("password_reset_tokens")
-    .ifNotExists()
-    .addColumn("email", "varchar(255)", (col) => col.primaryKey())
-    .addColumn("token", "varchar(255)", (col) => col.notNull())
-    .addColumn("created_at", "timestamp")
-    .execute();
-
-  await db.schema
     .createTable("account_profiles")
     .ifNotExists()
     .addColumn("account_id", "integer", (col) => col.unsigned().primaryKey())
-    .addColumn("verified_email", "varchar(255)")
-    .addColumn("email_verified_at", "timestamp")
-    .addColumn("pending_email", "varchar(255)")
     .addColumn("remember_token", "varchar(100)")
     .addColumn("deactivated_at", "timestamp")
     .addColumn("deactivation_ban_date", "integer", (col) => col.unsigned())
@@ -95,5 +84,4 @@ export async function down(db: Kysely<WebDatabase>): Promise<void> {
   await db.schema.dropTable("sessions").ifExists().execute();
   await db.schema.dropTable("account_operations").ifExists().execute();
   await db.schema.dropTable("account_profiles").ifExists().execute();
-  await db.schema.dropTable("password_reset_tokens").ifExists().execute();
 }

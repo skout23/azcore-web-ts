@@ -78,8 +78,7 @@ export async function createAccount(input: {
   await webDb
     .insertInto("account_profiles")
     .values({
-      account_id: accountId,
-      pending_email: email
+      account_id: accountId
     })
     .executeTakeFirst();
 
