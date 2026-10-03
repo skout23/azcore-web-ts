@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import type { Route } from "next";
 import Link from "next/link";
 import "@/styles/globals.css";
 import { env } from "@/server/config/env";
+import { HeaderNav } from "./nav";
 
 export const metadata: Metadata = {
   title: env.APP_NAME,
@@ -17,13 +17,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           <Link className="brand" href="/">
             {env.APP_NAME}
           </Link>
-          <nav>
-            <Link href="/characters">Characters</Link>
-            <Link href="/guilds">Guilds</Link>
-            <Link href="/auctions">Auctions</Link>
-            <Link href="/leaderboard">Leaderboard</Link>
-            <Link href={"/admin" as Route}>Admin</Link>
-          </nav>
+          <HeaderNav />
         </header>
         {children}
       </body>
