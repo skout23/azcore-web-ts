@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { isDatabaseConnectionError } from "@/server/auth/identity";
 import { charactersForAccount } from "@/server/game/characters";
 import { formatPlayed } from "@/server/game/wow";
 import { currentSession, sessionsForUser } from "@/server/session/database";
@@ -7,7 +8,17 @@ export default async function DashboardPage() {
   const session = await currentSession();
   if (!session) redirect("/login");
 
-  const characters = await charactersForAccount(session.user.id);
+  let characterLookup: { ok: true; characters: Awaited<ReturnType<typeof charactersForAccount>> } | { ok: false; characters: [] };
+
+  try {
+    characterLookup = { ok: true, characters: await charactersForAccount(session.user.id) };
+  } catch (error) {
+    if (!isDatabaseConnectionError(error)) throw error;
+
+    console.error("Dashboard character lookup failed because the characters database is unavailable or rejected access.", error);
+    characterLookup = { ok: false, characters: [] };
+  }
+
   const sessions = await sessionsForUser(session.user.id);
 
   return (
@@ -25,9 +36,14 @@ export default async function DashboardPage() {
 
       <section className="dashboard-section">
         <h2>Characters</h2>
-        {characters.length > 0 ? (
+        {!characterLookup.ok ? (
+          <p className="dashboard-warning">
+            Character data is temporarily unavailable. Check that the configured characters database user has SELECT access to the
+            AzerothCore characters database.
+          </p>
+        ) : characterLookup.characters.length > 0 ? (
           <div className="character-list">
-            {characters.map((character) => {
+            {characterLookup.characters.map((character) => {
               const played = formatPlayed(character.totaltime);
 
               return (

@@ -322,6 +322,31 @@ If Traefik is handling public traffic, keep `HTTP_BIND=127.0.0.1` or remove
 direct public exposure, attach the app to the Traefik network, and browse via
 the Traefik hostname instead of `:8080`.
 
+### Dashboard says character data is unavailable
+
+If login succeeds but `/dashboard` logs
+`ER_DBACCESS_DENIED_ERROR` for `acore_characters`, the app can read the auth
+database but the configured characters database user lacks access to the
+characters database. Grant read access to the user in `DB_CHAR_USERNAME`:
+
+```sql
+GRANT SELECT ON acore_characters.* TO 'azweb_ro'@'%';
+FLUSH PRIVILEGES;
+```
+
+If you are temporarily reusing the built-in AzerothCore `acore` account from a
+container, that user also needs a Docker-reachable host grant:
+
+```sql
+CREATE USER IF NOT EXISTS 'acore'@'%' IDENTIFIED BY 'same-password';
+GRANT SELECT ON acore_auth.* TO 'acore'@'%';
+GRANT SELECT ON acore_characters.* TO 'acore'@'%';
+FLUSH PRIVILEGES;
+```
+
+Prefer a dedicated read-only user such as `azweb_ro` for production, and set
+`DB_CHAR_USERNAME` / `DB_CHAR_PASSWORD` to that user.
+
 ## Operational Notes
 
 - `/setup` generates SQL and `.env` snippets in the browser. It does not save

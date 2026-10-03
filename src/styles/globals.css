@@ -236,6 +236,13 @@ a {
   color: var(--muted);
 }
 
+.dashboard-section .dashboard-warning {
+  max-width: 720px;
+  border-left: 3px solid var(--accent);
+  padding-left: 14px;
+  color: var(--text);
+}
+
 .dashboard-header button {
   min-height: 42px;
   border: 1px solid var(--accent);
