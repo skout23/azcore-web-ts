@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { accountExists, createAccount, isDatabaseConnectionError, isDuplicateAccountError } from "@/server/auth/accounts";
 import { wowConfig } from "@/server/config/wow";
 import { clientIp, formValue } from "@/server/http/forms";
+import { redirectUrl } from "@/server/http/urls";
 
 const usernamePattern = /^[A-Za-z0-9]{1,17}$/;
 
@@ -52,5 +53,5 @@ export async function POST(request: Request) {
     throw error;
   }
 
-  return NextResponse.redirect(new URL("/verify-email", request.url), { status: 303 });
+  return NextResponse.redirect(redirectUrl(request, "/verify-email"), { status: 303 });
 }

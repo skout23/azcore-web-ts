@@ -22,7 +22,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             <Link href="/guilds">Guilds</Link>
             <Link href="/auctions">Auctions</Link>
             <Link href="/leaderboard">Leaderboard</Link>
-            <Link href={"/setup" as Route}>Setup</Link>
             <Link href={"/admin" as Route}>Admin</Link>
           </nav>
         </header>

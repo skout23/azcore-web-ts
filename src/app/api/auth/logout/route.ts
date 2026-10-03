@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import { redirectUrl } from "@/server/http/urls";
 import { destroyDatabaseSession, sessionCookieName, sessionCookieOptions } from "@/server/session/database";
 
 export async function POST(request: Request) {
@@ -10,7 +11,7 @@ export async function POST(request: Request) {
     await destroyDatabaseSession(sessionId);
   }
 
-  const response = NextResponse.redirect(new URL("/", request.url), { status: 303 });
+  const response = NextResponse.redirect(redirectUrl(request, "/"), { status: 303 });
   response.cookies.set(sessionCookieName, "", { ...sessionCookieOptions, maxAge: 0 });
 
   return response;

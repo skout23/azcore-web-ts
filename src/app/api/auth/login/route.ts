@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { authenticateAccount, isDatabaseConnectionError } from "@/server/auth/accounts";
 import { formValue } from "@/server/http/forms";
+import { redirectUrl } from "@/server/http/urls";
 import { createDatabaseSession, sessionCookieName, sessionCookieOptions } from "@/server/session/database";
 
 export async function POST(request: Request) {
@@ -29,7 +30,7 @@ export async function POST(request: Request) {
   }
 
   const sessionId = await createDatabaseSession(account.id, request);
-  const response = NextResponse.redirect(new URL("/dashboard", request.url), { status: 303 });
+  const response = NextResponse.redirect(redirectUrl(request, "/dashboard"), { status: 303 });
   response.cookies.set(sessionCookieName, sessionId, sessionCookieOptions);
 
   return response;
