@@ -234,6 +234,33 @@ docker compose -f docker-compose.yml -f docker-compose.network.yml run --rm app 
 docker compose -f docker-compose.yml -f docker-compose.network.yml up -d
 ```
 
+## Troubleshooting
+
+### Migration connects to 127.0.0.1 or ::1
+
+If `npm run db:migrate` fails with `ECONNREFUSED 127.0.0.1:3306` or
+`ECONNREFUSED ::1:3306`, the app container is trying to connect to MySQL on
+itself. Set `DB_WEB_HOST` to a host that is reachable from inside the container:
+
+- MySQL is another Compose service on the same Docker network: use that service
+  name, commonly `mysql`.
+- MySQL is installed on the Docker host: use `host.docker.internal`, and make
+  sure MySQL listens on an address reachable from Docker, not only
+  `127.0.0.1`.
+- MySQL is on another machine: use that machine's DNS name or IP address.
+
+Check what Compose is passing into the container:
+
+```sh
+docker compose config | grep DB_WEB_HOST
+```
+
+You can override just the migration run while testing:
+
+```sh
+docker compose run --rm -e DB_WEB_HOST=mysql app npm run db:migrate
+```
+
 ## Operational Notes
 
 - `/setup` generates SQL and `.env` snippets in the browser. It does not save
