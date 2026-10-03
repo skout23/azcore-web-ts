@@ -33,8 +33,13 @@ try {
   console.log("Database migrations completed.");
 } catch (error) {
   console.error(`Database migration failed for ${config.user}@${config.host}:${config.port}/${config.database}.`);
-  console.error("If this ran in Docker, DB_WEB_HOST must be reachable from inside the app container.");
-  console.error("Use the MySQL service name on a shared Docker network, or host.docker.internal for host MySQL.");
+  if (error && typeof error === "object" && "code" in error && error.code === "ER_ACCESS_DENIED_ERROR") {
+    console.error("MySQL rejected the DB_WEB_USERNAME/DB_WEB_PASSWORD credentials.");
+    console.error("Create or update the MySQL user for the host MySQL sees from Docker, usually 'user'@'%'.");
+  } else {
+    console.error("If this ran in Docker, DB_WEB_HOST must be reachable from inside the app container.");
+    console.error("Use the MySQL service name on a shared Docker network, or host.docker.internal for host MySQL.");
+  }
   throw error;
 } finally {
   await webDb.destroy();

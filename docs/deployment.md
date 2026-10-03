@@ -261,6 +261,36 @@ You can override just the migration run while testing:
 docker compose run --rm -e DB_WEB_HOST=mysql app npm run db:migrate
 ```
 
+### Migration says access denied for `azweb`
+
+If the migration reaches MySQL but fails with `ER_ACCESS_DENIED_ERROR`, verify
+the web database user and password. The error message includes the host MySQL
+matched, for example `azweb`@`ip-172-20-0-2...`. The simplest Docker-friendly
+grant is `azweb`@`%`:
+
+```sql
+CREATE DATABASE IF NOT EXISTS azweb CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE USER IF NOT EXISTS 'azweb'@'%' IDENTIFIED BY 'change-me';
+ALTER USER 'azweb'@'%' IDENTIFIED BY 'change-me';
+GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, INDEX, ALTER ON azweb.* TO 'azweb'@'%';
+FLUSH PRIVILEGES;
+```
+
+Then make sure Compose is passing the same password:
+
+```sh
+docker compose config | grep -E 'DB_WEB_(HOST|DATABASE|USERNAME|PASSWORD)'
+```
+
+If your MySQL server also has a more specific `azweb` host entry with a
+different password, MySQL may choose that instead of `azweb`@`%`. Inspect the
+matching users:
+
+```sql
+SELECT user, host FROM mysql.user WHERE user = 'azweb';
+SHOW GRANTS FOR 'azweb'@'%';
+```
+
 ## Operational Notes
 
 - `/setup` generates SQL and `.env` snippets in the browser. It does not save

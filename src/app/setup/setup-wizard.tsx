@@ -53,6 +53,10 @@ function sqlString(value: string): string {
 }
 
 function buildEnv(state: SetupState): string {
+  const webPassword = state.webPassword || "change-me";
+  const authPassword = state.authPassword || "change-me";
+  const charPassword = state.charPassword || "change-me";
+
   return [
     'APP_NAME="AzerothCore"',
     "APP_ENV=production",
@@ -70,17 +74,17 @@ function buildEnv(state: SetupState): string {
     "DB_AUTH_PORT=3306",
     `DB_AUTH_DATABASE=${envValue(state.authDatabase)}`,
     `DB_AUTH_USERNAME=${envValue(state.authUsername)}`,
-    `DB_AUTH_PASSWORD=${envValue(state.authPassword)}`,
+    `DB_AUTH_PASSWORD=${envValue(authPassword)}`,
     `DB_WEB_HOST=${envValue(state.dbHost)}`,
     "DB_WEB_PORT=3306",
     `DB_WEB_DATABASE=${envValue(state.webDatabase)}`,
     `DB_WEB_USERNAME=${envValue(state.webUsername)}`,
-    `DB_WEB_PASSWORD=${envValue(state.webPassword)}`,
+    `DB_WEB_PASSWORD=${envValue(webPassword)}`,
     `DB_CHAR_HOST=${envValue(state.dbHost)}`,
     "DB_CHAR_PORT=3306",
     `DB_CHAR_DATABASE=${envValue(state.charDatabase)}`,
     `DB_CHAR_USERNAME=${envValue(state.charUsername)}`,
-    `DB_CHAR_PASSWORD=${envValue(state.charPassword)}`,
+    `DB_CHAR_PASSWORD=${envValue(charPassword)}`,
     `DB_WORLD_DATABASE=${envValue(state.worldDatabase)}`,
     "",
     "SESSION_LIFETIME=120",
