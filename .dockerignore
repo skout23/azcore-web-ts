@@ -1,0 +1,10 @@
+.git
+.next
+node_modules
+coverage
+.env
+.env*.local
+tsconfig.tsbuildinfo
+data/modelviewer
+public/branding/*
+!public/branding/.gitkeep
