@@ -1,6 +1,25 @@
 import { sql, type Kysely } from "kysely";
 import type { WebDatabase } from "../schema";
 
+async function createIndexIfMissing(
+  db: Kysely<WebDatabase>,
+  tableName: string,
+  indexName: string,
+  createIndex: () => Promise<void>
+): Promise<void> {
+  const result = await sql<{ count: number | string }>`
+    select count(*) as count
+    from information_schema.statistics
+    where table_schema = database()
+      and table_name = ${tableName}
+      and index_name = ${indexName}
+  `.execute(db);
+
+  if (Number(result.rows[0]?.count ?? 0) === 0) {
+    await createIndex();
+  }
+}
+
 export async function up(db: Kysely<WebDatabase>): Promise<void> {
   await db.schema
     .createTable("password_reset_tokens")
@@ -37,19 +56,21 @@ export async function up(db: Kysely<WebDatabase>): Promise<void> {
     .addColumn("updated_at", "timestamp", (col) => col.notNull())
     .execute();
 
-  await db.schema
-    .createIndex("account_operations_account_created_idx")
-    .ifNotExists()
-    .on("account_operations")
-    .columns(["account_id", "created_at"])
-    .execute();
+  await createIndexIfMissing(db, "account_operations", "account_operations_account_created_idx", () =>
+    db.schema
+      .createIndex("account_operations_account_created_idx")
+      .on("account_operations")
+      .columns(["account_id", "created_at"])
+      .execute()
+  );
 
-  await db.schema
-    .createIndex("account_operations_character_idx")
-    .ifNotExists()
-    .on("account_operations")
-    .columns(["realm_id", "character_guid"])
-    .execute();
+  await createIndexIfMissing(db, "account_operations", "account_operations_character_idx", () =>
+    db.schema
+      .createIndex("account_operations_character_idx")
+      .on("account_operations")
+      .columns(["realm_id", "character_guid"])
+      .execute()
+  );
 
   await db.schema
     .createTable("sessions")
@@ -62,8 +83,12 @@ export async function up(db: Kysely<WebDatabase>): Promise<void> {
     .addColumn("last_activity", "integer", (col) => col.notNull())
     .execute();
 
-  await db.schema.createIndex("sessions_user_id_idx").ifNotExists().on("sessions").column("user_id").execute();
-  await db.schema.createIndex("sessions_last_activity_idx").ifNotExists().on("sessions").column("last_activity").execute();
+  await createIndexIfMissing(db, "sessions", "sessions_user_id_idx", () =>
+    db.schema.createIndex("sessions_user_id_idx").on("sessions").column("user_id").execute()
+  );
+  await createIndexIfMissing(db, "sessions", "sessions_last_activity_idx", () =>
+    db.schema.createIndex("sessions_last_activity_idx").on("sessions").column("last_activity").execute()
+  );
 }
 
 export async function down(db: Kysely<WebDatabase>): Promise<void> {
