@@ -291,6 +291,37 @@ SELECT user, host FROM mysql.user WHERE user = 'azweb';
 SHOW GRANTS FOR 'azweb'@'%';
 ```
 
+### Browser cannot reach `host:8080`
+
+If the container is healthy but the browser shows `ERR_CONNECTION_REFUSED`,
+inspect the port mapping. A mapping like this is loopback-only:
+
+```text
+127.0.0.1:8080 -> 8080/tcp
+```
+
+That is reachable from the Docker host itself, but not from another computer.
+For direct remote access on port 8080, set:
+
+```env
+HTTP_BIND=0.0.0.0
+HTTP_PORT=8080
+```
+
+Then recreate the container because port bindings are applied at container
+creation:
+
+```sh
+docker compose up -d --force-recreate app
+```
+
+Also make sure the host firewall or cloud security group allows inbound TCP
+8080.
+
+If Traefik is handling public traffic, keep `HTTP_BIND=127.0.0.1` or remove
+direct public exposure, attach the app to the Traefik network, and browse via
+the Traefik hostname instead of `:8080`.
+
 ## Operational Notes
 
 - `/setup` generates SQL and `.env` snippets in the browser. It does not save

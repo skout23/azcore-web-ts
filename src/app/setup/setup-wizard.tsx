@@ -7,6 +7,8 @@ type SetupState = {
   appSecret: string;
   adminMinGmLevel: string;
   adminRealmId: string;
+  httpBind: string;
+  httpPort: string;
   networkName: string;
   dbHost: string;
   authDatabase: string;
@@ -28,6 +30,8 @@ const initialState: SetupState = {
   appSecret: "",
   adminMinGmLevel: "3",
   adminRealmId: "-1",
+  httpBind: "127.0.0.1",
+  httpPort: "8080",
   networkName: "azerothcore_default",
   dbHost: "mysql",
   authDatabase: "acore_auth",
@@ -65,8 +69,8 @@ function buildEnv(state: SetupState): string {
     `ADMIN_REALM_ID=${envValue(state.adminRealmId)}`,
     `APP_URL=${envValue(state.appUrl)}`,
     "",
-    "HTTP_BIND=127.0.0.1",
-    "HTTP_PORT=8080",
+    `HTTP_BIND=${envValue(state.httpBind)}`,
+    `HTTP_PORT=${envValue(state.httpPort)}`,
     "",
     `AC_NETWORK_NAME=${envValue(state.networkName)}`,
     "",
@@ -164,6 +168,14 @@ export function SetupWizard() {
             <label>
               Admin realm ID
               <input value={state.adminRealmId} onChange={(event) => update("adminRealmId", event.target.value)} />
+            </label>
+            <label>
+              HTTP bind
+              <input value={state.httpBind} onChange={(event) => update("httpBind", event.target.value)} />
+            </label>
+            <label>
+              HTTP port
+              <input value={state.httpPort} onChange={(event) => update("httpPort", event.target.value)} />
             </label>
             <label>
               Dockhand network
