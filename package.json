@@ -13,7 +13,9 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "db:migrate": "tsx scripts/migrate.ts"
+    "db:migrate": "tsx scripts/migrate.ts",
+    "checksec": "./scripts/checksec.sh",
+    "checksec:fix": "./scripts/checksec.sh --fix"
   },
   "dependencies": {
     "@node-rs/argon2": "^2.0.2",
@@ -21,7 +23,7 @@
     "kysely": "^0.28.5",
     "lucide-react": "^0.544.0",
     "mysql2": "^3.15.1",
-    "next": "^15.5.4",
+    "next": "^16.4.3",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "server-only": "^0.0.1",
@@ -37,6 +39,6 @@
     "tsx": "^4.20.5",
     "typescript": "^5.9.2",
     "typescript-eslint": "^8.44.1",
-    "vitest": "^3.2.4"
+    "vitest": "^5.0.5"
   }
 }
