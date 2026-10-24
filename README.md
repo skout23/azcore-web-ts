@@ -26,6 +26,19 @@ npm test
 npm run build
 ```
 
+Security checks use the versions pinned in `mise.toml`:
+
+```sh
+mise install
+npm run checksec
+```
+
+To apply npm's available vulnerability fixes before re-running the gate:
+
+```sh
+npm run checksec:fix
+```
+
 ## Docker
 
 Create and edit `.env` first:
